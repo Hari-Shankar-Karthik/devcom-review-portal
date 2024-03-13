@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     'users',
+    'review_portal',
+    'rest_framework',
 ]
 
 
