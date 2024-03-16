@@ -27,7 +27,7 @@ def department_list(request, format=None):
         return JsonResponse({"error": "Invalid request"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'PUT', 'DELETE']) # POST?
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def department_detail(request, id, format=None):
     try:
         department = Department.objects.get(pk=id)
@@ -44,6 +44,7 @@ def department_detail(request, id, format=None):
                     "id": course.pk,  # Fix: Use course.pk instead of course.id
                     "code": course.code,
                     "info": course.info,
+                    "review": course.review, # Fix: Add "review" field to the response
                     "ratings": course.ratings,
                     "average_rating": course.average_rating
                 } 
@@ -51,6 +52,13 @@ def department_detail(request, id, format=None):
             ]
         }
         return JsonResponse(dept_info, status=status.HTTP_200_OK)
+    
+    if request.method == 'POST':
+        serializer = CourseSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(department=department)
+            return JsonResponse({"success": "Course added"}, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     if request.method == 'PUT':
         serializer = DepartmentSerializer(department, data=request.data, partial=True)
@@ -113,13 +121,23 @@ def seed_database(request):
     Department.objects.all().delete()
     Course.objects.all().delete()
 
-    Department.objects.create(name="CS")
-    Department.objects.create(name="MA")
-    Department.objects.create(name="BB")
+    dept_names = ["CS", "MA", "BB", "CH", "PH", "EC", "ME", "CE", "EE", "AE", "CL", "HS"]
+    course_codes=[101, 102, 103, 104, 105, 106, 107, 108, 109, 110]
+
+    for dept_name in dept_names:
+        Department.objects.create(name=dept_name)
+
+    for dept_name in dept_names:
+        for course_code in course_codes:
+            Course.objects.create(department=Department.objects.get(name=dept_name), code=course_code, info=f"---INFO OF {dept_name}{course_code}---")
+
+    # Department.objects.create(name="CS")
+    # Department.objects.create(name="MA")
+    # Department.objects.create(name="BB")
     
-    Course.objects.create(department=Department.objects.get(name="CS"), code=105, info="Discrete Structures")
-    Course.objects.create(department=Department.objects.get(name="CS"), code=108, info="Software Systems Lab")
-    Course.objects.create(department=Department.objects.get(name="MA"), code=110, info="Linear Algebra")
-    Course.objects.create(department=Department.objects.get(name="BB"), code=101, info="Biology")
+    # Course.objects.create(department=Department.objects.get(name="CS"), code=105, info="Discrete Structures")
+    # Course.objects.create(department=Department.objects.get(name="CS"), code=108, info="Software Systems Lab")
+    # Course.objects.create(department=Department.objects.get(name="MA"), code=110, info="Linear Algebra")
+    # Course.objects.create(department=Department.objects.get(name="BB"), code=101, info="Biology")
     
     return JsonResponse({"success": "Database seeded"}, status=status.HTTP_204_NO_CONTENT)

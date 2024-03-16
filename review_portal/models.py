@@ -37,6 +37,7 @@ class Course(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     code = models.PositiveIntegerField()
     info = models.CharField(max_length=1000)
+    review = models.CharField(max_length=5000, blank=True, default="")
     ratings = models.JSONField(default=list, blank=True)
     average_rating = models.FloatField(default=0)
 

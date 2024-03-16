@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dept/', views.department_list), # GET, POST
-    path('dept/<int:id>/', views.department_detail), # GET, PUT, DELETE
+    path('dept/<int:id>/', views.department_detail), # GET, POST, PUT, DELETE
     path('dept/<int:dept_id>/top_courses/', views.top_rated_courses),
     path('dept/<int:dept_id>/course/<int:course_id>', views.view_course), # GET, POST, PUT, DELETE
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
