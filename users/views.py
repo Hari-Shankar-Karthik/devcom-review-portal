@@ -1,51 +1,39 @@
-from django.urls import reverse_lazy
-from django.views import generic, View
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login, logout
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import UserSerializer
 
-from .forms import CustomUserCreationForm
-
-
-class SignUp(generic.CreateView):
-    form_class = CustomUserCreationForm
-    success_url = reverse_lazy("home")
-    template_name = "signup.html"
-
-    def form_valid(self, form):
-        # Save the user and authenticate
-        response = super().form_valid(form)
-        username = form.cleaned_data.get('email')
-        raw_password = form.cleaned_data.get('password1')
-        user = authenticate(username=username, password=raw_password)
-        # Log in the user
-        login(self.request, user)
-        return response
-
-class Login(generic.FormView):
-    template_name = "login.html"
-    form_class = AuthenticationForm
-
-    def form_valid(self, form):
-        # Authenticate user
-        email = form.cleaned_data.get('username')  # Assuming email is used as username
-        password = form.cleaned_data.get('password')
-        user = authenticate(self.request, username=email, password=password)
-        
+@api_view(['POST'])
+def login_view(request):
+    if request.method == 'POST':
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(request, email=email, password=password)
         if user is not None:
-            # Log in the user
-            login(self.request, user)
-            return redirect('home')
+            login(request, user)
+            return Response({'message': 'Login successful'})
         else:
-            # Handle invalid login credentials
-            return super().form_invalid(form)
+            return Response({'message': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'message': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-class Logout(View):
-    def get(self, request, *args, **kwargs):
-        # Log out the user
+@api_view(['POST'])
+def logout_view(request):
+    if request.method == 'POST':
         logout(request)
-        # Redirect to the login page
-        return redirect('login')
+        return Response({'message': 'Logout successful'})
+    else:
+        return Response({'message': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-# def signup(request):
-#     return render(request, 'signup.html')
+@api_view(['POST'])
+def signup_view(request):
+    if request.method == 'POST':
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            login(request, user)
+            return Response({'message': 'Signup successful'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({'message': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
