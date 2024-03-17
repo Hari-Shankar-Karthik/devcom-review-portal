@@ -162,6 +162,51 @@ This is the backend API for the Course Review Portal. Below, you'll find a list 
         "success": "Department removed"
     }
     ```
+
+### `dept/:dept_id/top_courses`
+
+- `GET`: Retrieve top courses from a specific department
+
+Request:
+    ```
+    GET dept/94/top_courses
+    ```
+    
+Response:
+    ```
+    {
+        "top_courses": [
+            {
+                "id": 717,
+                "department": 94,
+                "code": 103,
+                "info": "---INFO OF EE103---",
+                "review": "",
+                "ratings": [5.0, 3.5, 4.5, 4.5, 3.0, 3.5, 4.5, 5.0, 2.5, 4.5],
+                "average_rating": 4.05
+            },
+            {
+                "id": 720,
+                "department": 94,
+                "code": 106,
+                "info": "---INFO OF EE106---",
+                "review": "",
+                "ratings": [3.0, 5.0, 3.5, 2.5, 4.5, 3.0, 4.0, 4.5, 3.5, 2.0],
+                "average_rating": 3.55
+            },
+            {
+                "id": 722,
+                "department": 94,
+                "code": 108,
+                "info": "---INFO OF EE108---",
+                "review": "",
+                "ratings": [5.0, 5.0, 3.0, 2.5, 1.5, 5.0, 3.5, 2.5, 3.5, 0.0],
+                "average_rating": 3.15
+            }
+        ]
+    }
+    ```
+
 ### `dept/:dept_id/course/:course_id`
 
 - *NOTE*: If `dept_id` does not match a department or if there is not matched course with the ID of `course_id` in the database, the response is:
@@ -251,5 +296,20 @@ This is the backend API for the Course Review Portal. Below, you'll find a list 
     ```
     {
         "success": "Course removed"
+    }
+    ```
+
+### `seed/`
+- `GET`: Seeds the entire database
+
+    Request:
+    ```
+    GET seed/
+    ```
+
+    Response:
+    ```
+    {
+        "success": "Database seeded"
     }
     ```
