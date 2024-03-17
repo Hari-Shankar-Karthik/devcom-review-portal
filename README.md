@@ -109,6 +109,26 @@ This is the backend API for the Course Review Portal. Below, you'll find a list 
     }
     ```
 
+- `POST`: Add a new course.
+
+    Request:
+    ```
+    POST dept/1/
+    Content-Type: application/json
+
+    {
+        "code": "200",
+        "info": "Multiplying 2 digit numbers"
+    }
+    ```
+
+    Response:
+    ```
+    {
+        "success": "Department updated"
+    }
+    ```
+
 
 - `PUT`: Update details of a specific department.
 
