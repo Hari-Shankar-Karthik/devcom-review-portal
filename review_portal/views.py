@@ -7,6 +7,8 @@ from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 
+from random import randint
+
 @api_view(['GET', 'POST'])
 def department_list(request, format=None):
     if request.method == 'GET':
@@ -129,7 +131,11 @@ def seed_database(request):
 
     for dept_name in dept_names:
         for course_code in course_codes:
-            Course.objects.create(department=Department.objects.get(name=dept_name), code=course_code, info=f"---INFO OF {dept_name}{course_code}---")
+            ratings = [randint(0, 10) / 2 for _ in range(10)]
+            average_rating = sum(ratings) / len(ratings)
+            Course.objects.create(department=Department.objects.get(name=dept_name), 
+                                  code=course_code, info=f"---INFO OF {dept_name}{course_code}---", 
+                                  ratings=ratings, average_rating=average_rating)
 
     # Department.objects.create(name="CS")
     # Department.objects.create(name="MA")
