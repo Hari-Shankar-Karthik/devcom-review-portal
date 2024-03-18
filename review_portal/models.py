@@ -26,7 +26,7 @@ Member functions:
 '''
 
 class Department(models.Model):
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=10, unique=True)
 
     def __str__(self) -> str:
         return self.name
@@ -35,7 +35,7 @@ class Department(models.Model):
 class Course(models.Model):
     # should I change this attribute's name to 'department_id'?
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    code = models.PositiveIntegerField()
+    code = models.PositiveIntegerField(unique=True)
     info = models.CharField(max_length=1000)
     review = models.CharField(max_length=5000, blank=True, default="")
     ratings = models.JSONField(default=list, blank=True)
@@ -43,6 +43,11 @@ class Course(models.Model):
 
     def __str__(self) -> str:
         return f"{self.department.name}{self.code}"
+
+
+    #def rank(self):
+        # Implement ranking logic based on average_rating within the department
+     #   pass
 
     # def rank(self):
     #     return sorted(self.department.course, key=lambda x: x.average_rating, reverse=True).index(self) + 1
