@@ -45,6 +45,7 @@ def department_detail(request, id, format=None):
                 {
                     "id": course.pk,  # Fix: Use course.pk instead of course.id
                     "code": course.code,
+                    "name": course.name,
                     "info": course.info,
                     "review": course.review, # Fix: Add "review" field to the response
                     "ratings": course.ratings,
@@ -119,12 +120,24 @@ def top_rated_courses(request, dept_id):
     return JsonResponse({"top_courses": serializer.data}, status=200)
 
 # DEBUGGING ONLY
+def clear_database(request):
+    Department.objects.all().delete()
+    Course.objects.all().delete()
+    return JsonResponse({"success": "Database cleared"}, status=status.HTTP_204_NO_CONTENT)
+
+# DEBUGGING ONLY
 def seed_database(request):
     Department.objects.all().delete()
     Course.objects.all().delete()
 
-    dept_names = ["CS", "MA", "BB", "CH", "PH", "EC", "ME", "CE", "EE", "AE", "CL", "HS"]
+    dept_names = ["AE", "CL", "CH", "CE", "CS", "EC", "EE", "MM", "ME"]
     course_codes=[101, 102, 103, 104, 105, 106, 107, 108, 109, 110]
+    topic_names = ["Data Structures", "Algorithms", "Discrete Mathematics", "Linear Algebra", "Differential Equations", "Thermodynamics", "Fluid Mechanics", "Heat Transfer", "Machine Design", "Manufacturing Processes", "Structure of Materials"]
+    # If you like a bit of fun
+    # topic_names = ["Two-Digit Multiplication", "Digestive System", "Factorisation", "Grammar", "Comprehension", "Creative Writing", "French Revolution", "Climate Change"]
+
+    def sample(collection):
+        return collection[randint(0, len(collection) - 1)]
 
     for dept_name in dept_names:
         Department.objects.create(name=dept_name)
@@ -133,8 +146,9 @@ def seed_database(request):
         for course_code in course_codes:
             ratings = [randint(0, 10) / 2 for _ in range(10)]
             average_rating = sum(ratings) / len(ratings)
-            Course.objects.create(department=Department.objects.get(name=dept_name), 
-                                  code=course_code, info=f"---INFO OF {dept_name}{course_code}---", 
+            Course.objects.create(department=Department.objects.get(name=dept_name),
+                                  code=course_code, name=f"{sample(topic_names)} and {sample(topic_names)}",
+                                  info=f"Welcome to {dept_name}{course_code}! This course is a lot of fun. You're going to learn a lot of interesting things.", 
                                   ratings=ratings, average_rating=average_rating)
 
     # Department.objects.create(name="CS")

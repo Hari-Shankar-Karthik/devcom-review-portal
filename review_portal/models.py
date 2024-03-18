@@ -33,9 +33,9 @@ class Department(models.Model):
 
 
 class Course(models.Model):
-    # should I change this attribute's name to 'department_id'?
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     code = models.PositiveIntegerField()
+    name = models.CharField(max_length=100)
     info = models.CharField(max_length=1000)
     review = models.CharField(max_length=5000, blank=True, default="")
     ratings = models.JSONField(default=list, blank=True)
