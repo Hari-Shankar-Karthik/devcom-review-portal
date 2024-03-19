@@ -35,7 +35,7 @@ class Department(models.Model):
 class Course(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     code = models.PositiveIntegerField(unique=True)
-    name = models.CharField(max_length=100)
+    #name = models.CharField(max_length=100)
     info = models.CharField(max_length=1000)
     review = models.CharField(max_length=5000, blank=True, default="")
     ratings = models.JSONField(default=list, blank=True)
