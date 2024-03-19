@@ -43,7 +43,7 @@ def department_detail(request, id, format=None):
             "name": department.name,
             "courses": [
                 {
-                    "id": course.code,  # Fix: Use course.pk instead of course.id
+                    "id": course.id,  # Fix: Use course.pk instead of course.id
                     "code": course.code,
                     "name": course.name,
                     "info": course.info,
