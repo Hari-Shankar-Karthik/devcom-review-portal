@@ -130,7 +130,7 @@ def seed_database(request):
     Department.objects.all().delete()
     Course.objects.all().delete()
 
-    dept_names = ["AE", "CL", "CH", "CE", "CS", "EC", "EE", "MM", "ME"]
+    dept_names = ["AE", "ChE", "CE", "CSE", "EE", "Math", "ME", "Physics"]
     course_codes=[101, 102, 103, 104, 105, 106, 107, 108, 109, 110]
     topic_names = ["Data Structures", "Algorithms", "Discrete Mathematics", "Linear Algebra", "Differential Equations", "Thermodynamics", "Fluid Mechanics", "Heat Transfer", "Machine Design", "Manufacturing Processes", "Structure of Materials"]
     # If you like a bit of fun
