@@ -78,8 +78,8 @@ def department_detail(request, id, format=None):
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def view_course(request, dept_id, course_id, format=None):
     try:
-        department = Department.objects.get(name=dept_id)
-        course = Course.objects.get(code=course_id, department=department)
+        department = Department.objects.get(pk=dept_id)
+        course = Course.objects.get(pk=course_id, department=department)
     except ObjectDoesNotExist:
         return JsonResponse({"error": "Course not found"}, status=status.HTTP_404_NOT_FOUND)
     
