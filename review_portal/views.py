@@ -39,7 +39,6 @@ def department_detail(request, id, format=None):
     
     if request.method == 'GET':
         dept_info = {
-            "id": id,
             "name": department.name,
             "courses": [
                 {
